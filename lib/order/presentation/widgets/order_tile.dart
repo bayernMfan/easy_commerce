@@ -23,7 +23,7 @@ class OrderTile extends StatelessWidget {
           subtitle: Text(
               'Артикул ${map["Positions"]["Article"]} в количестве ${map["Positions"]["Count"]}. \nДата заказа: ${DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.fromMicrosecondsSinceEpoch(map["Date"].microsecondsSinceEpoch))}',
               style: TextStyle(color: Colors.white, fontSize: 14), overflow: TextOverflow.fade,),
-          tileColor: Color.fromRGBO(41, 5, 141, 0.7),
+          tileColor: Color.fromRGBO(41, 5, 141, 1),
           dense: true,
           isThreeLine: true,
         ),

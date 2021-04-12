@@ -9,10 +9,13 @@ class OrdersPage extends StatefulWidget {
   _OrdersPageState createState() => _OrdersPageState();
 }
 
-class _OrdersPageState extends State<OrdersPage> {
+class _OrdersPageState extends State<OrdersPage>
+    with AutomaticKeepAliveClientMixin<OrdersPage> {
   Query query = FirebaseFirestore.instance.collection('orders');
   @override
   Widget build(BuildContext context) {
+    print('BUILD!');
+    super.build(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: StreamBuilder<Object>(
@@ -25,15 +28,17 @@ class _OrdersPageState extends State<OrdersPage> {
             if (stream.hasError) {
               return Center(child: Text(stream.error.toString()));
             }
-
+            
             QuerySnapshot querySnapshot = stream.data;
             return ListView.builder(
                 itemCount: querySnapshot.size,
                 itemBuilder: (context, index) {
-                  print(querySnapshot.docs[index].data().runtimeType);
                   return OrderTile(map: querySnapshot.docs[index].data());
                 });
           }),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

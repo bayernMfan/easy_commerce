@@ -127,6 +127,10 @@ class _MakeOrderPageState extends State<MakeOrderPage> {
                                                 int.parse(_countController.text)
                                           }
                                         });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text("Отправили Ваш заказ!"),
+                                        ));
                                       }
                                     : null,
                             child: Text(

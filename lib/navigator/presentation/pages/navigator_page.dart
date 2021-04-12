@@ -10,7 +10,7 @@ class NavigatorPage extends StatefulWidget {
 
 class _NavigatorPageState extends State<NavigatorPage> {
   int _selectedIndex = 0;
-  final PageController _pageController = PageController();
+  final PageController _pageController = PageController(keepPage: false);
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +40,9 @@ class _NavigatorPageState extends State<NavigatorPage> {
       body: Stack(children: [
         Positioned.fill(
             child: Image.asset(
-          'assets/bckg.jpeg',
+          'assets/bckg_purple.jpeg',
           fit: BoxFit.cover,
+          //color: Theme.of(context).primaryColor,
         )),
         Positioned(child: Container(color: Colors.black.withOpacity(0.4))),
         Positioned(
@@ -51,9 +52,6 @@ class _NavigatorPageState extends State<NavigatorPage> {
               ProfilePage(),
               OrdersPage(),
               MakeOrderPage()
-              // ProfilePage(),
-              // HomeTables(),
-              // ShoppingPage(),
             ],
             onPageChanged: (page) {
               setState(() {

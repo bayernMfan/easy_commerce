@@ -51,6 +51,7 @@ class _OrderInputState extends State<OrderInput> {
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
+        errorStyle: TextStyle(fontWeight: FontWeight.bold),
         hintText: widget.hint,
         contentPadding: EdgeInsets.all(11),
         isDense: true,
