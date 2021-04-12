@@ -1,8 +1,10 @@
 import 'package:easy_commerce/auth/presentation/pages/auth_page.dart';
 import 'package:easy_commerce/navigator/presentation/pages/navigator_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -10,17 +12,31 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Easy Commerce',
+      theme: ThemeData(
+        // Define the default brightness and colors.
+        brightness: Brightness.light,
+        primaryColor: Color(0xFF29058D),
+        accentColor: Color(0xFF7923E8),
+
+        // Define the default font family.
+        fontFamily: 'Rubick',
+
+        // Define the default TextTheme. Use this to specify the default
+        // text styling for headlines, titles, bodies of text, and more.
+        textTheme: TextTheme(
+          headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+        ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       initialRoute: '/intro',
       routes: {
         '/intro': (context) => IntroPage(),
         '/auth': (context) => AuthPage(),
         '/nav': (context) => NavigatorPage(),
       },
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
       //home: IntroPage(),
     );
   }
@@ -46,8 +62,7 @@ class _IntroPageState extends State<IntroPage> {
             ),
             Text(
               'Welcome',
-              
-            style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
@@ -63,6 +78,7 @@ class _IntroPageState extends State<IntroPage> {
 
   void _redirect() async {
     await Future.delayed(Duration(seconds: 2));
+    await Firebase.initializeApp();
     Navigator.of(context).pushReplacementNamed('/auth');
   }
 }

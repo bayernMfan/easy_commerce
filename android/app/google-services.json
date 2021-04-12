@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "90650520152",
+    "firebase_url": "https://luckyshop-7cb94.firebaseio.com",
+    "project_id": "luckyshop-7cb94",
+    "storage_bucket": "luckyshop-7cb94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90650520152:android:bb20361bbfc13ca312382d",
+        "android_client_info": {
+          "package_name": "com.example.easyCommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90650520152-7obju0bted70jo2d7b8d7uv1k0fi0o36.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgR2iSL5EkUUTzjrwHetwki3WjtZxLGks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90650520152-7obju0bted70jo2d7b8d7uv1k0fi0o36.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "90650520152-mrpe9gcs6igujf77uktdj0j2dig8i86e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.easyCommerce"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
