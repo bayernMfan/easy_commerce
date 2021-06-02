@@ -32,13 +32,14 @@ class _OrderInputState extends State<OrderInput> {
         if (widget.isNum) LengthLimitingTextInputFormatter(11),
         if (widget.isNum) FilteringTextInputFormatter.digitsOnly,
         FilteringTextInputFormatter.singleLineFormatter,
+        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
       ],
       validator: (value) {
         if (value.length == 0) {
-          return 'Заполните поле';
+          return 'required';
         }
         if (widget.isNum && value.length > 9) {
-          return "Неверное поле";
+          return "Wrong input";
         }
         return null;
       },

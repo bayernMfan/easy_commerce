@@ -1,7 +1,9 @@
+import 'package:easy_commerce/auth/domain/repository/user_repository.dart';
 import 'package:easy_commerce/order/presentation/pages/make_order_page.dart';
 import 'package:easy_commerce/order/presentation/pages/orders_page.dart';
 import 'package:easy_commerce/profile/presentation/pages/profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NavigatorPage extends StatefulWidget {
   @override
@@ -49,7 +51,9 @@ class _NavigatorPageState extends State<NavigatorPage> {
           child: PageView(
             controller: _pageController,
             children: <Widget>[
-              ProfilePage(),
+              ProfilePage(
+                user: RepositoryProvider.of<UserRepository>(context).getUser,
+              ),
               OrdersPage(),
               MakeOrderPage()
             ],

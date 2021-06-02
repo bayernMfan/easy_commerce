@@ -1,13 +1,20 @@
+import 'package:easy_commerce/auth/domain/entities/user.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key}) : super(key: key);
+  ProfilePage({Key key, this.user}) : super(key: key);
+  final User user;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -44,17 +51,17 @@ class _ProfilePageState extends State<ProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Andrey Butuzov',
+                              '${widget.user.name} ${widget.user.secondName}',
                               style: Theme.of(context).textTheme.headline3,
                             ),
                             Padding(padding: EdgeInsets.only(top: 8)),
                             Text(
-                              'a.k.a сделай за 2 часа перед парой',
+                              'Phone: +7${widget.user.phone}',
                               style: Theme.of(context).textTheme.subtitle1,
                             ),
                             Padding(padding: EdgeInsets.only(top: 16)),
                             Text(
-                              'Когда-нибудь это приложение станет моей вкр, но это не точно =(',
+                              'Welcome to Easy Commerce! You may now make your orders',
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],

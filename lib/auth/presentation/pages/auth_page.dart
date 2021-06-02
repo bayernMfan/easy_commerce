@@ -1,5 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_commerce/auth/domain/entities/user.dart';
+import 'package:easy_commerce/auth/domain/repository/user_repository.dart';
+import 'package:easy_commerce/auth/presentation/pages/registr_page.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthPage extends StatefulWidget {
   AuthPage({Key key}) : super(key: key);
@@ -12,6 +18,17 @@ class _AuthPageState extends State<AuthPage> {
   final _formKey = GlobalKey<FormState>();
   final _phoneFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final db = FirebaseFirestore.instance;
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,14 +50,14 @@ class _AuthPageState extends State<AuthPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 130),
                         child: Text(
-                          'АВТОРИЗАЦИЯ',
+                          'AUTHORIZATION',
                           style: Theme.of(context).textTheme.headline4,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 24),
                         child: Text(
-                          'Пожалуйста, введите ваш телефон и пароль.',
+                          'Enter your login and password.',
                           style: Theme.of(context).textTheme.subtitle1,
                         ),
                       ),
@@ -55,6 +72,7 @@ class _AuthPageState extends State<AuthPage> {
                         child: Column(children: [
                           TextFormField(
                             focusNode: _phoneFocusNode,
+                            controller: _phoneController,
                             keyboardType: TextInputType.number,
                             cursorColor: Color(0xFFBFBFBF),
                             inputFormatters: <TextInputFormatter>[
@@ -63,23 +81,30 @@ class _AuthPageState extends State<AuthPage> {
                               FilteringTextInputFormatter.singleLineFormatter,
                             ],
                             validator: (value) {
-                              if (value.length > 9) {
-                                return 'Максимум 9 цифр';
+                              if (value.length > 10) {
+                                return 'Max 10 digits';
+                              }
+                              if (value.length == 0) {
+                                return 'required';
+                              } else if (value.length < 10) {
+                                return 'Enter full phone number';
                               }
                               return null;
                             },
-                            autovalidateMode: AutovalidateMode.always,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 20,
                             ),
                             decoration: InputDecoration(
+                              hintText: '9991234567',
                               contentPadding: EdgeInsets.all(11),
                               isDense: true,
                               prefix:
                                   Padding(padding: EdgeInsets.only(left: 6)),
                               prefixIconConstraints: BoxConstraints(
-                                maxWidth: 32,
+                                maxWidth: 42,
                                 maxHeight: 25,
                               ),
                               prefixIcon: Padding(
@@ -95,7 +120,7 @@ class _AuthPageState extends State<AuthPage> {
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      '+',
+                                      '+7',
                                       textHeightBehavior: TextHeightBehavior(
                                           applyHeightToFirstAscent: false),
                                       style: TextStyle(
@@ -125,17 +150,30 @@ class _AuthPageState extends State<AuthPage> {
                             child: TextFormField(
                               obscureText: true,
                               focusNode: _passwordFocusNode,
+                              controller: _passwordController,
                               keyboardType: TextInputType.text,
                               cursorColor: Color(0xFFBFBFBF),
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.singleLineFormatter,
+                                LengthLimitingTextInputFormatter(17),
                               ],
-                              autovalidateMode: AutovalidateMode.always,
+                              validator: (value) {
+                                if (value.length > 16) {
+                                  return 'Max 16 symbols';
+                                }
+                                if (value.length == 0) {
+                                  return 'required';
+                                }
+                                return null;
+                              },
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 20,
                               ),
                               decoration: InputDecoration(
+                                hintText: 'Password',
                                 contentPadding: EdgeInsets.all(11),
                                 isDense: true,
                                 prefix:
@@ -156,7 +194,30 @@ class _AuthPageState extends State<AuthPage> {
                                 ),
                               ),
                             ),
-                          )
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: RichText(
+                                text: TextSpan(
+                                    text: "Haven't an account yet? ",
+                                    style: TextStyle(color: Colors.black),
+                                    children: [
+                                  TextSpan(
+                                    text: "Registration",
+                                    style: TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.underline),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegistrPage()));
+                                      },
+                                  )
+                                ])),
+                          ),
                         ]),
                       ),
                     ),
@@ -177,12 +238,46 @@ class _AuthPageState extends State<AuthPage> {
                                 // },
                                 _formKey?.currentState?.validate() ?? false
                                     ? () async {
-                                        await Navigator.pushReplacementNamed(
-                                            context, '/nav');
+                                        bool found = false;
+                                        await db.collection('users').get().then(
+                                            (QuerySnapshot querySnapshot) {
+                                          for (QueryDocumentSnapshot doc
+                                              in querySnapshot.docs) {
+                                            if (doc["Phone"] ==
+                                                    int.tryParse(
+                                                        _phoneController
+                                                            .text) &&
+                                                doc['Password'] ==
+                                                    _passwordController.text) {
+                                              RepositoryProvider
+                                                          .of<UserRepository>(
+                                                              context)
+                                                      .setUser =
+                                                  new User(
+                                                      name: doc['FirstName'],
+                                                      secondName:
+                                                          doc['SecondName'],
+                                                      thirdName:
+                                                          doc['ThirdName'],
+                                                      phone: doc['Phone']);
+                                              Navigator.of(context)
+                                                  .pushReplacementNamed('/nav');
+                                              found = true;
+                                              break;
+                                            }
+                                          }
+                                        });
+
+                                        if (found == false)
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                                'Wrong login or password'),
+                                          ));
                                       }
                                     : null,
                             child: Text(
-                              'Войти',
+                              'Login',
                               style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 20,

@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,21 +11,25 @@ class OrderTile extends StatelessWidget {
       padding: const EdgeInsets.only(top: 16),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: ListTile(
-          leading: Icon(
-            Icons.shopping_cart_outlined,
-            color: Colors.white,
+        child: Container(
+          color: Color(0xFF29058D).withOpacity(0.9),
+          child: ListTile(
+            leading: Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.white,
+            ),
+            title: Text(
+              map["Credentials"] ?? "Undefined",
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
+            subtitle: Text(
+              'Article ${map["Positions"]["Article"]} in count ${map["Positions"]["Count"]}. \nOrder date: ${DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.fromMicrosecondsSinceEpoch(map["Date"].microsecondsSinceEpoch))} \nAddress: ${map['ShopAddress']}',
+              style: TextStyle(color: Colors.white, fontSize: 14),
+              overflow: TextOverflow.fade,
+            ),
+            dense: true,
+            //isThreeLine: true,
           ),
-          title: Text(
-            map["Credentials"] ?? "Не известно",
-            style: TextStyle(color: Colors.white, fontSize: 24),
-          ),
-          subtitle: Text(
-              'Артикул ${map["Positions"]["Article"]} в количестве ${map["Positions"]["Count"]}. \nДата заказа: ${DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.fromMicrosecondsSinceEpoch(map["Date"].microsecondsSinceEpoch))}',
-              style: TextStyle(color: Colors.white, fontSize: 14), overflow: TextOverflow.fade,),
-          tileColor: Color.fromRGBO(41, 5, 141, 1),
-          dense: true,
-          isThreeLine: true,
         ),
       ),
     );
