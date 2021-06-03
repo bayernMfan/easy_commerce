@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:easy_commerce/auth/domain/entities/user.dart';
 import 'package:easy_commerce/auth/domain/repository/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -454,7 +457,8 @@ class _RegistrPageState extends State<RegistrPage> {
                                         'ThirdName': _thirdNameController.text,
                                         'Phone':
                                             int.tryParse(_phoneController.text),
-                                        'Password': _passwordController.text
+                                        'Password':
+                                            '${sha256.convert(utf8.encode(_passwordController.text))}'
                                       }).then((value) {
                                         RepositoryProvider.of<UserRepository>(
                                                 context)

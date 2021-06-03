@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:easy_commerce/auth/domain/entities/user.dart';
 import 'package:easy_commerce/auth/domain/repository/user_repository.dart';
 import 'package:easy_commerce/auth/presentation/pages/registr_page.dart';
@@ -248,7 +251,7 @@ class _AuthPageState extends State<AuthPage> {
                                                         _phoneController
                                                             .text) &&
                                                 doc['Password'] ==
-                                                    _passwordController.text) {
+                                                    '${sha256.convert(utf8.encode(_passwordController.text))}') {
                                               RepositoryProvider
                                                           .of<UserRepository>(
                                                               context)
@@ -271,8 +274,8 @@ class _AuthPageState extends State<AuthPage> {
                                         if (found == false)
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
-                                            content: Text(
-                                                'Wrong login or password'),
+                                            content:
+                                                Text('Wrong login or password'),
                                           ));
                                       }
                                     : null,
